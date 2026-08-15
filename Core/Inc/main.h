@@ -31,6 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -57,6 +58,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED4_Pin GPIO_PIN_5
+#define LED4_GPIO_Port GPIOC
+#define LED3_Pin GPIO_PIN_6
+#define LED3_GPIO_Port GPIOC
+#define LED2_Pin GPIO_PIN_8
+#define LED2_GPIO_Port GPIOC
+#define LED1_Pin GPIO_PIN_12
+#define LED1_GPIO_Port GPIOA
+#define SPI1_CS_Pin GPIO_PIN_9
+#define SPI1_CS_GPIO_Port GPIOB
+
+/* USER CODE BEGIN Private defines */
 
 #define LED4_Pin GPIO_PIN_5
 #define LED4_GPIO_Port GPIOC
@@ -94,7 +107,7 @@ void Error_Handler(void);
 #define RESET_Pin GPIO_PIN_9
 #define RESET_GPIO_Port GPIOB
 
-/* USER CODE BEGIN Private defines */
+
 #define USER_Btn_Pin GPIO_PIN_13
 #define USER_Btn_GPIO_Port GPIOC
 #define LD1_Pin GPIO_PIN_0
