@@ -15,6 +15,12 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+
+typedef struct {
+    uint8_t reg;
+    uint8_t val;
+} sensor_reg;
+
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -23,10 +29,6 @@ extern "C" {
 
 /* USER CODE BEGIN Private defines */
 
-typedef struct {
-    uint8_t reg;
-    uint8_t val;
-} sensor_reg;
 
 void i2c_send_flash(uint8_t, uint16_t);
 uint8_t i2c_read_flash(uint16_t);
@@ -34,6 +36,8 @@ HAL_StatusTypeDef i2c_send_cam(uint8_t, uint8_t);
 uint8_t i2c_read_cam(uint8_t);
 void i2c_cam_init_test(void);
 void apply_regs_i2c(const sensor_reg *regs, uint8_t);
+void i2c_flash_test(void);
+void i2c_camera_init_test(void);
 
 
 /* USER CODE END Private defines */

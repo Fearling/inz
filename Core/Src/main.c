@@ -73,6 +73,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	uint8_t image_buffer[50000];   /* dostosuj rozmiar do formatu/rozdzielczosci */
+ 	uint32_t image_len = 0;
 
   /* USER CODE END 1 */
 
@@ -100,8 +102,18 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(100);
   //arducam_spi_test();
+  i2c_flash_test();
   i2c_cam_init_test();
+  i2c_camera_init_test();
+  arducam_spi_test();
 
+
+  //.i2c_cam_init_test();       /* konfiguracja sensora, kontrast itd. */
+  /* opcjonalnie - test komunikacji SPI */
+  uint32_t dummy_len;
+  arducam_capture_photo(&huart2);   // "rozgrzewkowe", ignoruj wynik
+  HAL_Delay(500);
+  arducam_capture_photo(&huart2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,7 +122,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  printf("dziala");
 
     /* USER CODE BEGIN 3 */
   }
@@ -232,7 +243,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
