@@ -38,6 +38,7 @@ void i2c_cam_init_test(void);
 void apply_regs_i2c(const sensor_reg *regs, uint8_t);
 void i2c_flash_test(void);
 void i2c_camera_init_test(void);
+void i2c_bus_recovery(void);
 
 
 /* USER CODE END Private defines */

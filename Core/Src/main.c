@@ -73,8 +73,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint8_t image_buffer[50000];   /* dostosuj rozmiar do formatu/rozdzielczosci */
- 	uint32_t image_len = 0;
+	//uint8_t image_buffer[50000];   /* dostosuj rozmiar do formatu/rozdzielczosci */
+ 	//uint32_t image_len = 0;
 
   /* USER CODE END 1 */
 
@@ -84,6 +84,16 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  const sensor_reg SPI_fifo_prepare[] = {
+      {0x04, 0x01},   // FIFO_CLEAR_MASK
+      {0x04, 0x10},   // FIFO_RDPTR_RST_MASK
+      {0x04, 0x20},   // FIFO_WRPTR_RST_MASK
+  };
+
+  /* ---- GRUPA 4: start przechwytywania ---- */
+  const sensor_reg SPI_start_capture[] = {
+      {0x04, 0x02},   // FIFO_START_MASK
+  };
 
   /* USER CODE END Init */
 
@@ -91,6 +101,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  //i2c_bus_recovery();
 
   /* USER CODE END SysInit */
 
@@ -102,17 +113,32 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(100);
   //arducam_spi_test();
+  uint8_t rev = spi_read_reg(0x40);   /* ARDUCHIP_REV */
+  printf("ArduChip REV = 0x%02X\r\n", rev);
   i2c_flash_test();
   i2c_cam_init_test();
   i2c_camera_init_test();
   arducam_spi_test();
-
-
+  HAL_Delay(2000);
   //.i2c_cam_init_test();       /* konfiguracja sensora, kontrast itd. */
   /* opcjonalnie - test komunikacji SPI */
-  uint32_t dummy_len;
-  arducam_capture_photo(&huart2);   // "rozgrzewkowe", ignoruj wynik
+  printf("TEST BURST - pierwsze 32 bajty:\r\n");
+
+  /* NAJPIERW pelny, swiezy capture - dokladnie jak w arducam_capture_photo */
+  printf("TEST VSYNC - obserwuje bit0 rejestru 0x41 przez 2 sekundy:\r\n");
+  for (int i = 0; i < 20; i++) {
+      uint8_t status = spi_read_reg(0x41);
+      printf("0x41 = 0x%02X (VSYNC bit0=%d)\r\n", status, status & 0x01);
+      HAL_Delay(100);
+  }
+  arducam_capture_photo(&huart2);
   HAL_Delay(500);
+  printf("TEST VSYNC - obserwuje bit0 rejestru 0x41 przez 2 sekundy:\r\n");
+  for (int i = 0; i < 20; i++) {
+      uint8_t status = spi_read_reg(0x41);
+      printf("0x41 = 0x%02X (VSYNC bit0=%d)\r\n", status, status & 0x01);
+      HAL_Delay(100);
+  }
   arducam_capture_photo(&huart2);
   /* USER CODE END 2 */
 

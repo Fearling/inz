@@ -192,3 +192,45 @@ void i2c_bus_scan(void)
 
     printf("=== KONIEC SKANOWANIA - znaleziono %d urzadzen ===\r\n", found_count);
 }
+
+void i2c_bus_recovery(void)
+{
+    /* Tymczasowo przełącz PB6(SCL)/PB7(SDA) na zwykłe GPIO */
+    GPIO_InitTypeDef gpio = {0};
+    gpio.Mode = GPIO_MODE_OUTPUT_OD;   /* open-drain, tak jak prawdziwe I2C */
+    gpio.Pull = GPIO_NOPULL;
+    gpio.Speed = GPIO_SPEED_FREQ_LOW;
+
+    gpio.Pin = GPIO_PIN_6;
+    HAL_GPIO_Init(GPIOB, &gpio);   /* SCL jako GPIO */
+    gpio.Pin = GPIO_PIN_7;
+    HAL_GPIO_Init(GPIOB, &gpio);   /* SDA jako GPIO */
+
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);   /* SDA wysoko */
+
+    /* Wygeneruj do 9 impulsów zegara - tyle, ile maksymalnie bitów może "czekać" slave */
+    for (int i = 0; i < 9; i++) {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+        HAL_Delay(1);
+
+        /* Jeśli SDA wróciło do stanu wysokiego, urządzenie się zwolniło - koniec */
+        if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7) == GPIO_PIN_SET) {
+            break;
+        }
+    }
+
+    /* Wygeneruj warunek STOP (SDA idzie w górę, gdy SCL jest wysoko) */
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+    HAL_Delay(1);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+    HAL_Delay(1);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+    HAL_Delay(1);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+    HAL_Delay(1);
+
+    /* Przywróć piny do trybu I2C (Alternate Function) */
+    MX_I2C1_Init();
+}
