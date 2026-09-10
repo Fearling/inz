@@ -81,7 +81,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
   const sensor_reg SPI_fifo_prepare[] = {
@@ -110,35 +111,18 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-  /* USER CODE BEGIN 2 */
+
+  arducam_check_version();
+
   HAL_Delay(100);
-  //arducam_spi_test();
-  uint8_t rev = spi_read_reg(0x40);   /* ARDUCHIP_REV */
-  printf("ArduChip REV = 0x%02X\r\n", rev);
   i2c_flash_test();
   i2c_cam_init_test();
-  i2c_camera_init_test();
-  arducam_spi_test();
-  HAL_Delay(2000);
-  //.i2c_cam_init_test();       /* konfiguracja sensora, kontrast itd. */
-  /* opcjonalnie - test komunikacji SPI */
-  printf("TEST BURST - pierwsze 32 bajty:\r\n");
+  i2c_camera_init_test();      /* pelna konfiguracja JPEG + kontrast */
+  HAL_Delay(1000);              /* stabilizacja po pelnej inicjalizacji */
 
-  /* NAJPIERW pelny, swiezy capture - dokladnie jak w arducam_capture_photo */
-  printf("TEST VSYNC - obserwuje bit0 rejestru 0x41 przez 2 sekundy:\r\n");
-  for (int i = 0; i < 20; i++) {
-      uint8_t status = spi_read_reg(0x41);
-      printf("0x41 = 0x%02X (VSYNC bit0=%d)\r\n", status, status & 0x01);
-      HAL_Delay(100);
-  }
-  arducam_capture_photo(&huart2);
-  HAL_Delay(500);
-  printf("TEST VSYNC - obserwuje bit0 rejestru 0x41 przez 2 sekundy:\r\n");
-  for (int i = 0; i < 20; i++) {
-      uint8_t status = spi_read_reg(0x41);
-      printf("0x41 = 0x%02X (VSYNC bit0=%d)\r\n", status, status & 0x01);
-      HAL_Delay(100);
-  }
+  arducam_check_version();      /* powinno pokazac 0x40 */
+  arducam_spi_test();           /* powinno pokazac before=0x00 after=0x55 */
+
   arducam_capture_photo(&huart2);
   /* USER CODE END 2 */
 

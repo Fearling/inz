@@ -24,7 +24,7 @@ void spi_write_reg(uint8_t addr, uint8_t val);
 uint8_t spi_read_reg(uint8_t addr);
 void apply_regs_spi(const sensor_reg_spi *regs, uint8_t count);
 
-void arducam_spi_test(void);
+uint8_t arducam_spi_test(void);
 uint8_t arducam_capture_photo(UART_HandleTypeDef *huart2);
 
 
