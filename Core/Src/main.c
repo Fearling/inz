@@ -102,15 +102,24 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  //i2c_bus_recovery();
-
+  i2c_bus_recovery();
   /* USER CODE END SysInit */
-
+  HAL_Delay(100);
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
+
+  //HAL_GPIO_WritePin(           );
+
+
+  engineInit();                 // raz, na starcie main()
+  //test();
+  move(200, 1, 1);              // silnik 1, do przodu, 200 mikrokroków
+  move(200, 1, 0);               // silnik 1, do tyłu, 200 mikrokroków
+  move(200, 2, 1);               // silnik 2, do przodu
+
 
   arducam_check_version();
 
@@ -331,26 +340,61 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
 
+  /* GPIOA */
+  HAL_GPIO_WritePin(GPIOA,
+                    STEP1_Pin |
+                    DIR1_Pin  |
+                    MS12_Pin  |
+                    MS22_Pin  |
+                    MS11_Pin,
+                    GPIO_PIN_RESET);
+
+  /* GPIOB */
+  HAL_GPIO_WritePin(GPIOB,
+                    STEP2_Pin |
+                    DIR2_Pin  |
+                    MS31_Pin  |
+                    MS21_Pin  |
+                    SLEEP_Pin,
+                    GPIO_PIN_RESET);
+
+  /* GPIOC */
+  HAL_GPIO_WritePin(GPIOC,
+                    MS32_Pin |
+                    RESET_Pin |
+                    ENNABLE_Pin,
+                    GPIO_PIN_RESET);
+
   /*Configure GPIO pins : LED4_Pin LED3_Pin LED2_Pin */
-  GPIO_InitStruct.Pin = LED4_Pin|LED3_Pin|LED2_Pin;
+  GPIO_InitStruct.Pin = LED4_Pin|LED3_Pin|LED2_Pin | MS32_Pin |
+          RESET_Pin |
+          ENNABLE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED1_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin;
+  GPIO_InitStruct.Pin = LED1_Pin | STEP1_Pin |
+          DIR1_Pin  |
+          MS12_Pin  |
+          MS22_Pin  |
+          MS11_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI1_CS_Pin */
-  GPIO_InitStruct.Pin = SPI1_CS_Pin;
+  GPIO_InitStruct.Pin = SPI1_CS_Pin | STEP2_Pin |
+          DIR2_Pin  |
+          MS31_Pin  |
+          MS21_Pin  |
+          SLEEP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI1_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
   HAL_GPIO_WritePin(GPIOC, LED4_Pin|LED3_Pin|LED2_Pin, GPIO_PIN_RESET);

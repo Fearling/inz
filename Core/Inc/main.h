@@ -34,6 +34,7 @@ extern "C" {
 #include <stdio.h>
 #include "i2c.h"
 #include "spi.h"
+#include "engine.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -83,30 +84,32 @@ void Error_Handler(void);
 #define SPI1_CS_Pin GPIO_PIN_9
 #define SPI1_CS_GPIO_Port GPIOB
 
-#define STEP1_Pin GPIO_PIN_2
-#define STEP1_GPIO_Port GPIOA
-#define DIR1_Pin GPIO_PIN_3
-#define DIR1_GPIO_Port GPIOA
-#define MS12_Pin GPIO_PIN_5
+#define STEP1_Pin        GPIO_PIN_0
+#define STEP1_GPIO_Port  GPIOA
+#define DIR1_Pin         GPIO_PIN_1
+#define DIR1_GPIO_Port   GPIOA
+#define MS12_Pin GPIO_PIN_8
 #define MS12_GPIO_Port GPIOA
-#define MS22_Pin GPIO_PIN_6
+#define MS22_Pin GPIO_PIN_9
 #define MS22_GPIO_Port GPIOA
 #define MS32_Pin GPIO_PIN_7
-#define MS32_GPIO_Port GPIOA
-#define ENNABLE_Pin GPIO_PIN_7
+#define MS32_GPIO_Port GPIOC
+#define STEP2_Pin GPIO_PIN_10
+#define STEP2_GPIO_Port GPIOB
+#define DIR2_Pin GPIO_PIN_4
+#define DIR2_GPIO_Port GPIOB
+#define MS31_Pin GPIO_PIN_5
+#define MS31_GPIO_Port GPIOB
+#define MS21_Pin         GPIO_PIN_4
+#define MS21_GPIO_Port   GPIOA
+#define MS11_Pin GPIO_PIN_10
+#define MS11_GPIO_Port GPIOA
+#define RESET_Pin GPIO_PIN_0
+#define RESET_GPIO_Port GPIOC
+#define ENNABLE_Pin GPIO_PIN_1
 #define ENNABLE_GPIO_Port GPIOC
-#define DIR2_Pin GPIO_PIN_9
-#define DIR2_GPIO_Port GPIOA
-#define MS31_Pin GPIO_PIN_10
-#define MS31_GPIO_Port GPIOA
-#define MS21_Pin GPIO_PIN_3
-#define MS21_GPIO_Port GPIOB
-#define SLEEP_Pin GPIO_PIN_4
+#define SLEEP_Pin GPIO_PIN_0
 #define SLEEP_GPIO_Port GPIOB
-#define MS11_Pin GPIO_PIN_5
-#define MS11_GPIO_Port GPIOB
-#define RESET_Pin GPIO_PIN_9
-#define RESET_GPIO_Port GPIOB
 
 
 #define USER_Btn_Pin GPIO_PIN_13

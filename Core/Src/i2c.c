@@ -160,10 +160,10 @@ void i2c_flash_test()
 	uint8_t temp = 1;
 	i2c_send_flash(0x00, 0x0000);
 	temp = i2c_read_flash(0x00);
-	printf(temp);
+	printf("temp=0x%02X\r\n", temp);
 	i2c_send_flash(0xaa, 0x0000);
 	temp = i2c_read_flash(0x00);
-	printf(temp);
+	printf("temp=0x%02X\r\n", temp);
 }
 
 void i2c_bus_scan(void)
@@ -232,5 +232,4 @@ void i2c_bus_recovery(void)
     HAL_Delay(1);
 
     /* Przywróć piny do trybu I2C (Alternate Function) */
-    MX_I2C1_Init();
 }
